@@ -1,1 +1,1 @@
-web: gunicorn food_ordering_app.wsgi
+web: python manage.py migrate && gunicorn food_ordering_app.wsgi
