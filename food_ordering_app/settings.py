@@ -85,18 +85,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'food_ordering_app.wsgi.application'
 
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
-    #     'USER': os.environ.get('DB_USER', 'root'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-    #     'HOST': os.environ.get('DB_HOST', 'localhost'),
-    #     'PORT': os.environ.get('DB_PORT', '3306'),
-    # }
 
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
-}
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
+else:
+    DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
+    }  
+    }
 
 
 
