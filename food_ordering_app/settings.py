@@ -91,16 +91,26 @@ if os.environ.get("DATABASE_URL"):
         'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 else:
+    # DATABASES = {
+    #   'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
+    #     'USER': os.environ.get('DB_USER', 'root'),
+    #     'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+    #     'HOST': os.environ.get('DB_HOST', 'localhost'),
+    #     'PORT': os.environ.get('DB_PORT', '3306'),
+    # }  
+    # }
     DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
-        'USER': os.environ.get('DB_USER', 'root'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3306'),
-    }  
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.getenv("MYSQLDATABASE"),
+        "USER": os.getenv("MYSQLUSER"),
+        "PASSWORD": os.getenv("MYSQLPASSWORD"),
+        "HOST": os.getenv("MYSQLHOST"),
+        "PORT": os.getenv("MYSQLPORT"),
     }
+}
 
 
 
