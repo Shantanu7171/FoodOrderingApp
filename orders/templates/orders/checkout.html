@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Checkout – FoodApp{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h2 style="font-size:1.1rem; font-weight:600;">Checkout</h2>
+  <a href="{% url 'cart' %}" style="font-size:0.82rem; color:var(--muted);">← Back to cart</a>
+</div>
+
+<div class="row g-4">
+
+  <!-- Billing form -->
+  <div class="col-md-7">
+    <div class="card">
+      <div class="card-header">Delivery details</div>
+      <div class="card-body">
+        <form action="{% url 'place_order' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="payment_method" value="PayPal">
+
+          <div class="row g-3">
+            <div class="col-6">
+              <label>First name</label>
+              {{ form.first_name }}
+            </div>
+            <div class="col-6">
+              <label>Last name</label>
+              {{ form.last_name }}
+            </div>
+            <div class="col-6">
+              <label>Email</label>
+              {{ form.email }}
+            </div>
+            <div class="col-6">
+              <label>Phone</label>
+              {{ form.phone }}
+            </div>
+            <div class="col-12">
+              <label>Address</label>
+              {{ form.address }}
+            </div>
+            <div class="col-6">
+              <label>City</label>
+              {{ form.city }}
+            </div>
+            <div class="col-6">
+              <label>State</label>
+              {{ form.state }}
+            </div>
+            <div class="col-6">
+              <label>Country</label>
+              {{ form.country }}
+            </div>
+            <div class="col-6">
+              <label>Pin code</label>
+              {{ form.pin_code }}
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 mt-4">Place order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order summary -->
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header">Order summary</div>
+      <div class="card-body" style="padding:0;">
+        {% for item in cart_items %}
+        <div class="d-flex justify-content-between align-items-center px-3 py-2" style="border-bottom:1px solid var(--border);">
+          <div>
+            <p style="margin:0; font-size:0.875rem; font-weight:500;">{{ item.dish.name }}</p>
+            <p style="margin:0; font-size:0.75rem; color:var(--muted);">{{ item.quantity }} × ₹{{ item.dish.price }}</p>
+          </div>
+          <span style="font-size:0.875rem;">₹{{ item.sub_total }}</span>
+        </div>
+        {% endfor %}
+        <div class="px-3 py-3">
+          <div class="d-flex justify-content-between mb-1" style="font-size:0.875rem;">
+            <span style="color:var(--muted);">Subtotal</span><span>₹{{ total }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2" style="font-size:0.875rem;">
+            <span style="color:var(--muted);">Tax</span><span>₹{{ tax }}</span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <span style="font-weight:600;">Total</span>
+            <span style="font-weight:700; font-size:1.05rem;">₹{{ grand_total }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('form input, form select, form textarea').forEach(el => {
+    if (!el.classList.contains('form-control')) el.classList.add('form-control');
+  });
+</script>
+{% endblock %}

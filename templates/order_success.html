@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Order Success – FoodApp{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5 py-4">
+  <div class="success-checkmark mb-3">
+    <div class="check-icon">
+      <span class="icon-line line-tip"></span>
+      <span class="icon-line line-long"></span>
+      <div class="icon-circle"></div>
+      <div class="icon-fix"></div>
+    </div>
+  </div>
+  <h2 style="font-size:1.4rem; font-weight:700; color:#6fcf97; margin-top:16px;">Order confirmed!</h2>
+  <p style="color:var(--muted); font-size:0.875rem; margin-top:8px;">
+    Thanks for your order. We're already getting it ready.
+  </p>
+  <div class="d-flex gap-2 justify-content-center mt-4">
+    <a href="{% url 'menu' %}" class="btn btn-primary">Order more</a>
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">Go home</a>
+  </div>
+</div>
+{% endblock %}

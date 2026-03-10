@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Order Placed – FoodApp{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-7">
+
+    <!-- Success header -->
+    <div class="text-center mb-4">
+      <div class="success-checkmark mb-3">
+        <div class="check-icon">
+          <span class="icon-line line-tip"></span>
+          <span class="icon-line line-long"></span>
+          <div class="icon-circle"></div>
+          <div class="icon-fix"></div>
+        </div>
+      </div>
+      <h2 style="font-size:1.3rem; font-weight:700; color:#6fcf97;">Order placed!</h2>
+      <p style="color:var(--muted); font-size:0.875rem; margin-top:6px;">
+        Transaction ID: <code style="color:var(--text);">{{ trans_id }}</code> &nbsp;·&nbsp;
+        Order #<code style="color:var(--text);">{{ order_number }}</code>
+      </p>
+    </div>
+
+    <!-- Order detail card -->
+    <div class="card">
+      <div class="card-header">Order details</div>
+      <div class="card-body">
+        <p style="font-size:0.875rem; color:var(--muted); margin-bottom:4px;">
+          <strong style="color:var(--text);">Name:</strong> {{ order.name }}
+        </p>
+        <p style="font-size:0.875rem; color:var(--muted); margin-bottom:16px;">
+          <strong style="color:var(--text);">Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.country }}
+        </p>
+
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in ordered_items %}
+            <tr>
+              <td>{{ item.dish.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>₹{{ item.price }}</td>
+              <td class="text-end">₹{{ item.sub_total }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-end mt-3" style="font-weight:700; font-size:1rem;">
+          Grand total: ₹{{ order.total }}
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2 justify-content-center mt-4">
+      <a href="{% url 'menu' %}" class="btn btn-primary">Order more</a>
+      <a href="{% url 'home' %}" class="btn btn-outline-secondary">Go home</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

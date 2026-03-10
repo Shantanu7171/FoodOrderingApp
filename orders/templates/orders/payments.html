@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card shadow-sm p-5">
+        <h2 class="mb-4">Complete Your Payment</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Total Amount: ₹{{ order.total }}</h4>
+                <p>Order Number: {{ order.order_number }}</p>
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-lg" id="rzp-button1">Pay with Razorpay</button>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var amount = "{{ amount }}";
+    var url = "{% url 'verify_payment' %}";
+    var csrftoken = getCookie('csrftoken');
+    var order_number = "{{ order.order_number }}";
+
+    var options = {
+        "key": "{{ razorpay_key_id }}", // Enter the Key ID generated from the Dashboard
+        "amount": "{{ amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "{{ currency }}",
+        "name": "Food Online",
+        "description": "Food Ordering Transaction",
+        "image": "{% static 'logo/your_logo.png' %}", // You can add a logo path here
+        "order_id": "{{ razorpay_order.id }}", // This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": function (response){
+            // console.log(response)
+            var payment_id = response.razorpay_payment_id;
+            var order_id = response.razorpay_order_id;
+            var signature = response.razorpay_signature;
+
+            sendData(amount, payment_id, order_id, signature, order_number);
+        },
+        "prefill": {
+            "name": "{{ order.name }}",
+            "email": "{{ order.email }}",
+            "contact": "{{ order.phone }}"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+
+    function sendData(amount, payment_id, order_id, signature, order_number){
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({
+                amount: amount,
+                razorpay_payment_id: payment_id,
+                razorpay_order_id: order_id,
+                razorpay_signature: signature,
+                order_number: order_number
+            }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if(data.success){
+                window.location.href = "{% url 'order_complete' %}?order_number="+order_number+"&payment_id="+payment_id;
+            } else {
+                alert("Payment Verification Failed!");
+            }
+        });
+    }
+</script>
+{% endblock %}

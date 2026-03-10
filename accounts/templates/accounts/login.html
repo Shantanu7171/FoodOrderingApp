@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Login – FoodApp{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-sm-10 col-md-5">
+
+    <div class="mb-4">
+      <h2 style="font-size:1.4rem; font-weight:700;">Welcome back</h2>
+      <p style="color:var(--muted); font-size:0.875rem; margin:0;">Sign in to your account</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="padding:24px;">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label>{{ field.label }}</label>
+            {{ field }}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100 mt-1">Sign in</button>
+        </form>
+      </div>
+    </div>
+
+    <p class="text-center mt-3" style="font-size:0.82rem; color:var(--muted);">
+      No account? <a href="{% url 'registerUser' %}" style="color:var(--text);">Create one</a>
+    </p>
+
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.custom_input_field input, form input').forEach(el => {
+    el.classList.add('form-control');
+  });
+</script>
+{% endblock %}
