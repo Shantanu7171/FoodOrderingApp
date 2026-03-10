@@ -86,32 +86,30 @@ WSGI_APPLICATION = 'food_ordering_app.wsgi.application'
 
 
 
-if os.environ.get("DATABASE_URL"):
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
-else:
-    # DATABASES = {
-    #   'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
-    #     'USER': os.environ.get('DB_USER', 'root'),
-    #     'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-    #     'HOST': os.environ.get('DB_HOST', 'localhost'),
-    #     'PORT': os.environ.get('DB_PORT', '3306'),
-    # }  
-    # }
-    DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("MYSQLDATABASE"),
-        "USER": os.getenv("MYSQLUSER"),
-        "PASSWORD": os.getenv("MYSQLPASSWORD"),
-        "HOST": os.getenv("MYSQLHOST"),
-        "PORT": os.getenv("MYSQLPORT"),
-    }
-}
 
+if os.getenv("MYSQLHOST"):  # Railway environment
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.getenv("MYSQLDATABASE"),
+            "USER": os.getenv("MYSQLUSER"),
+            "PASSWORD": os.getenv("MYSQLPASSWORD"),
+            "HOST": os.getenv("MYSQLHOST"),
+            "PORT": os.getenv("MYSQLPORT"),
+        }
+    }
+else:  # Local development
+    
+ DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('DB_NAME', 'food_ordering_db'),
+        'USER': os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3306'),
+    }  
+    }
 
 
 
@@ -145,9 +143,8 @@ USE_TZ = True
 
 
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
