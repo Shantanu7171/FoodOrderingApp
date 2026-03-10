@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Register – FoodApp{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+<div class="row justify-content-center mt-5">
+  <div class="col-sm-10 col-md-5">
+
+    <div class="mb-4">
+      <h2 style="font-size:1.4rem; font-weight:700;">Create an account</h2>
+      <p style="color:var(--muted); font-size:0.875rem; margin:0;">Join FoodApp and start ordering</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="padding:24px;">
+        <form action="{% url 'registerUser' %}" method="POST">
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color:#ff6b6b; font-size:0.78rem; margin-top:4px;">{{ field.errors }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary w-100 mt-1">Create account</button>
+        </form>
+      </div>
+    </div>
+
+    <p class="text-center mt-3" style="font-size:0.82rem; color:var(--muted);">
+      Already have an account? <a href="{% url 'login' %}" style="color:var(--text);">Sign in</a>
+    </p>
+
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('form input, form select, form textarea').forEach(el => {
+    if (!el.classList.contains('form-control')) el.classList.add('form-control');
+  });
+</script>
+{% endblock %}

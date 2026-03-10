@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block title %}Cart – FoodApp{% endblock %}
+
+{% block content %}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+  <h2 style="font-size:1.1rem; font-weight:600;">Your cart</h2>
+  <a href="{% url 'menu' %}" style="font-size:0.82rem; color:var(--muted);">← Keep browsing</a>
+</div>
+
+{% if not cart_items %}
+<div class="text-center py-5" style="color:var(--muted);">
+  <i class="fas fa-shopping-bag mb-3" style="font-size:2.5rem; opacity:0.3;"></i>
+  <p class="mt-2">Your cart is empty.</p>
+  <a href="{% url 'menu' %}" class="btn btn-primary mt-2">Browse menu</a>
+</div>
+
+{% else %}
+<div class="row g-4">
+
+  <!-- Items -->
+  <div class="col-md-8">
+    <div class="card">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th style="width:130px;">Qty</th>
+            <th style="width:110px;">Price</th>
+            <th style="width:80px;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                {% if item.dish.image %}
+                <img src="{{ item.dish.image.url }}" style="width:56px; height:56px; object-fit:cover; border-radius:8px;">
+                {% else %}
+                <div style="width:56px; height:56px; border-radius:8px; background:var(--bg3); display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:var(--muted);">No img</div>
+                {% endif %}
+                <div>
+                  <p style="font-weight:600; margin:0; font-size:0.875rem;">{{ item.dish.name }}</p>
+                  <p style="color:var(--muted); font-size:0.78rem; margin:0;">{{ item.dish.description|truncatewords:5 }}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="input-group input-group-sm" style="width:110px;">
+                <a href="{% url 'remove_cart' item.dish.id %}" class="btn btn-light">−</a>
+                <input type="text" class="form-control" value="{{ item.quantity }}" readonly>
+                <form action="{% url 'add_cart' item.dish.id %}" method="POST">
+                  {% csrf_token %}
+                  <button class="btn btn-light" type="submit">+</button>
+                </form>
+              </div>
+            </td>
+            <td style="vertical-align:middle;">
+              <span style="font-weight:600;">₹{{ item.sub_total }}</span>
+              <br>
+              <span style="font-size:0.75rem; color:var(--muted);">₹{{ item.dish.price }} each</span>
+            </td>
+            <td style="vertical-align:middle;">
+              <a href="{% url 'remove_cart_item' item.dish.id %}"
+                 onclick="return confirm('Remove this item?')"
+                 class="btn btn-sm btn-outline-danger">✕</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Order summary</div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between mb-2" style="font-size:0.875rem;">
+          <span style="color:var(--muted);">Subtotal</span>
+          <span>₹{{ total }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2" style="font-size:0.875rem;">
+          <span style="color:var(--muted);">Tax</span>
+          <span>₹{{ tax }}</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between mb-4">
+          <span style="font-weight:600;">Total</span>
+          <span style="font-weight:700; font-size:1.05rem;">₹{{ grand_total }}</span>
+        </div>
+        <div class="d-grid gap-2">
+          <a href="{% url 'checkout' %}" class="btn btn-success">Proceed to checkout</a>
+          <a href="{% url 'menu' %}" class="btn btn-outline-secondary">Continue shopping</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+{% endblock %}
