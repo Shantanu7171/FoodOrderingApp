@@ -15,6 +15,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 load_dotenv()
+import cloudinary
 
 RAZOR_KEY_ID = os.environ.get('RAZOR_KEY_ID')
 RAZOR_KEY_SECRET = os.environ.get('RAZOR_KEY_SECRET')
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'menu',
     'cart',
     'orders',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -155,4 +158,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+cloudinary.config(
+    cloud_name = 'di7svfgda',
+    api_key = '923695288369162',
+    api_secret = 'xnNhpZ3Xlh-NLtobbGKYuD5U42k'
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
